@@ -1,0 +1,1 @@
+1. Por que no endpoint de retorno HTML eu uso o parâmetro response_class, mas nos outros eu uso o parâmetro response_model?

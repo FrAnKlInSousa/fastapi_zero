@@ -40,14 +40,42 @@ se, ao usar o comando `fastapi`, não reconhecer, tente as seguintes abordagens:
 ou se não reconhecer o ambiente virtual:
 `poetry run fastapi dev fastapi_zero/app.py`
 
-# Ruff
+# Libs
+## Ruff
 
 `poetry add --group dev ruff`
 
-# Pytest
+## Pytest
 
 `poetry add --group dev pytest pytest-cov`
 
-# Taskipy
+## Taskipy
 
 `poetry add --group dev taskipy`
+
+## SQLAlchemy
+
+`poetry add sqlalchemy`
+
+## Pydantic-settings
+
+`poetry add pydantic-settings`
+
+## Alembic
+
+`poetry add alembic`
+### Comandos principais
+* inicia um sistema de migração:
+`alembic init migrations`
+* cria uma migração:
+`alembic revision --autogenerate -m "create users table"`
+* aplica uma migração:
+`alembic upgrade head`
+
+# Database
+## SQLite
+* Para conectar pelo terminal:
+`python -m sqlite3 database.db`
+* ou para ter uma visualização diferente do banco:
+`pipx run harlequin database.db`
+

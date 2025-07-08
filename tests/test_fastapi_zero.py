@@ -62,6 +62,21 @@ def test_read_users(client):
     }
 
 
+def test_read_user(client):
+    response = client.get('/users/1')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'username': 'franklin',
+        'email': 'frank@gmail.com',
+        'id': 1,
+    }
+
+
+def test_read_user_not_found(client):
+    response = client.get('/users/3')
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
 def test_update_user(client):
     response = client.put(
         '/users/1',

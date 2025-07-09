@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+from fastapi_zero.schemas import UserPublic
+
 
 def test_root(client):
     response = client.get('/')
@@ -51,23 +53,22 @@ def test_create_user(client):
 def test_read_users(client):
     response = client.get('/users/')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'users': [
-            {
-                'username': 'franklin',
-                'email': 'frank@gmail.com',
-                'id': 1,
-            }
-        ]
-    }
+    assert response.json() == {'users': []}
 
 
-def test_read_user(client):
+def test_read_users_with_users(client, user):
+    user_schema = UserPublic.model_validate(user).model_dump()
+    response = client.get('/users/')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': [user_schema]}
+
+
+def test_read_user(client, user):
     response = client.get('/users/1')
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'username': 'franklin',
-        'email': 'frank@gmail.com',
+        'username': 'Test',
+        'email': 'test@test.com',
         'id': 1,
     }
 
@@ -77,7 +78,7 @@ def test_read_user_not_found(client):
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_update_user(client):
+def test_update_user(client, user):
     response = client.put(
         '/users/1',
         json={
@@ -103,16 +104,39 @@ def test_update_user_not_found(client):
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_delete_user(client):
+def test_delete_user(client, user):
     response = client.delete('/users/1')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'username': 'updated',
-        'email': 'new@gmail.com',
-        'id': 1,
-    }
+    assert response.json() == {'message': 'Usuário deletado.'}
+    response = client.get('/users/1')
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_delete_user_not_found(client):
     response = client.delete('/users/33')
     assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_updated_integrity_error(client, user):
+    # inserindo usuário Fausto
+    client.post(
+        '/users/',
+        json={
+            'username': 'fausto',
+            'email': 'fausto@example.com',
+            'password': 'secret',
+        },
+    )
+
+    # alterando o user da fixture
+    response = client.put(
+        f'/users/{user.id}',
+        json={
+            'username': 'fausto',
+            'email': 'bob@example.com',
+            'password': 'newsecret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Usuário ou email já existe.'}

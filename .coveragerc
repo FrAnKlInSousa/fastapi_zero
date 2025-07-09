@@ -1,0 +1,3 @@
+[run]
+omit =
+    fastapi_zero/settings.py

@@ -72,6 +72,8 @@ ou se não reconhecer o ambiente virtual:
 * aplica uma migração:
 `alembic upgrade head`
 
+# PWDlib
+`poetry add "pwdlib[argon2]"`
 # Database
 ## SQLite
 * Para conectar pelo terminal:

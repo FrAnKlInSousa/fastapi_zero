@@ -4,7 +4,8 @@
 4. Por que o dependency_overrides não é clicável para abrir o local onde ele está assim como os métodos e atributos?
 5. Os argumentos mapper e connection da função fake_time_hook não são usados. Por quê?
 6. Verificar o warning "ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6..." que dá em alguns testes (ex.: test_read_user)
-7. 
+7. Tem como renomear o username do formulário do OAuth?
+8. No primeiro exercício da aula 06 diz que o pwdlib não faz validação da senha. Ele não faz mesmo?
 
 
 # Observações

@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from fastapi_zero.app import app
 from fastapi_zero.database import get_session
 from fastapi_zero.models import User, table_registry
+from fastapi_zero.security import get_password_hash
 
 
 @pytest.fixture
@@ -57,8 +58,23 @@ def mock_db_time():
 
 @pytest.fixture
 def user(session):
-    user = User(username='Test', email='test@test.com', password='secret')
+    password = 'secret'
+    user = User(
+        username='Test',
+        email='test@test.com',
+        password=get_password_hash(password),
+    )
     session.add(user)
     session.commit()
     session.refresh(user)
+    user.clean_password = password
     return user
+
+
+@pytest.fixture
+def token(client, user):
+    response = client.post(
+        '/token',
+        data={'username': user.email, 'password': user.clean_password},
+    )
+    return response.json()['access_token']

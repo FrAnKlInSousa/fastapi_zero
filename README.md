@@ -74,6 +74,15 @@ ou se não reconhecer o ambiente virtual:
 
 # PWDlib
 `poetry add "pwdlib[argon2]"`
+
+# PyJWT
+`poetry add pyjwt`
+
+# tzdata
+* Dependendo da compilação do python, as propriedades do timezone 
+* podem não estar disponíveis. Para resolver isso, basta instalar o tzdata:
+`poetry add tzdata`
+
 # Database
 ## SQLite
 * Para conectar pelo terminal:

@@ -179,7 +179,7 @@ def test_updated_integrity_error(client, user, token):
 
 def test_get_token(client, user):
     response = client.post(
-        '/token',
+        '/auth/token',
         data={'username': user.email, 'password': user.clean_password},
     )
     access_token = response.json()
@@ -208,7 +208,7 @@ def test_get_token_user_error(client):
 
 def test_token_with_user_error(client):
     response = client.post(
-        '/token', data={'username': 'no-user@test.com', 'password': '123'}
+        '/auth/token', data={'username': 'no-user@test.com', 'password': '123'}
     )
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json() == {'detail': 'Email ou senha incorretos.'}
@@ -216,7 +216,8 @@ def test_token_with_user_error(client):
 
 def test_token_invalid_password(client, user):
     response = client.post(
-        '/token', data={'username': 'test@test.com', 'password': 'wrong_pass'}
+        '/auth/token',
+        data={'username': 'test@test.com', 'password': 'wrong_pass'},
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED

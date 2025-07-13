@@ -88,6 +88,10 @@ ou se não reconhecer o ambiente virtual:
 
 ## SQLite + asyncio
 `poetry add aiosqlite`
+
+## pytest-asyncio
+`poetry add --group dev pytest-asyncio`
+
 # Database
 ## SQLite
 * Para conectar pelo terminal:

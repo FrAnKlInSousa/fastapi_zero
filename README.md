@@ -90,3 +90,11 @@ ou se não reconhecer o ambiente virtual:
 * ou para ter uma visualização diferente do banco:
 `pipx run harlequin database.db`
 
+# Secret Key
+
+* Uma forma de gerar uma secret key com o python:
+```python
+import secrets
+
+secrets.token_hex(256)
+```

@@ -72,17 +72,22 @@ ou se não reconhecer o ambiente virtual:
 * aplica uma migração:
 `alembic upgrade head`
 
-# PWDlib
+## PWDlib
 `poetry add "pwdlib[argon2]"`
 
-# PyJWT
+## PyJWT
 `poetry add pyjwt`
 
-# tzdata
+## tzdata
 * Dependendo da compilação do python, as propriedades do timezone 
 * podem não estar disponíveis. Para resolver isso, basta instalar o tzdata:
 `poetry add tzdata`
 
+## sqlalchemy asyncio
+`poetry add "sqlalchemy[asyncio]"`
+
+## SQLite + asyncio
+`poetry add aiosqlite`
 # Database
 ## SQLite
 * Para conectar pelo terminal:

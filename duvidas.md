@@ -17,3 +17,4 @@
 * Reassistir a aula 04 (1h10m) para entender melhor o mock_db_time
 * Assistir live de corrotinas (#151 a #154)
 * Reassistir a aula 05 (0h50min) para entender o dependency_overrides
+* Assistir live de faker e factory-boy (#281)

@@ -26,7 +26,7 @@ def test_create_user_with_existing_username(user, client):
     response = client.post(
         '/users/',
         json={
-            'username': 'Test',
+            'username': user.username,
             'email': 'email@email.com',
             'password': 'secret',
         },
@@ -39,7 +39,7 @@ def test_create_user_with_existing_email(user, client):
         '/users/',
         json={
             'username': 'frank',
-            'email': 'test@test.com',
+            'email': user.email,
             'password': 'secret',
         },
     )
@@ -59,9 +59,9 @@ def test_read_user(client, user):
     response = client.get(f'/users/{user.id}')
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'username': 'Test',
-        'email': 'test@test.com',
-        'id': 1,
+        'username': user.username,
+        'email': user.email,
+        'id': user.id,
     }
 
 
@@ -146,3 +146,17 @@ def test_updated_integrity_error(client, user, token):
 
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.json() == {'detail': 'Usuário ou email já existe.'}
+
+
+def test_update_user_with_wrong_user(client, user, token):
+    response = client.put(
+        f'/users/{user.id + 1}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'bob',
+            'email': 'bob@example.com',
+            'password': 'mypass',
+        },
+    )
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Sem permissão.'}

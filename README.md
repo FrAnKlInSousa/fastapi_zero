@@ -95,6 +95,8 @@ ou se não reconhecer o ambiente virtual:
 ## factory-boy
 `poetry add --group dev factory-boy`
 
+## freezegun
+`poetry add --group dev freezegun`
 
 # Database
 ## SQLite

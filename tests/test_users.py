@@ -109,17 +109,13 @@ def test_delete_user(client, user, token):
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_delete_other_user(client, token, user):
-    new_user = client.post(
-        '/users/',
-        json={'username': 'new', 'email': 'new@new.com', 'password': '123'},
-    )
-    new_user_data = new_user.json()
+def test_delete_user_wrong_user(client, token, other_user):
     response = client.delete(
-        f'/users/{new_user_data["id"]}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Sem permissão.'}
 
 
 def test_updated_integrity_error(client, user, token):

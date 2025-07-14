@@ -47,6 +47,9 @@ pythonpath = "."
 addopts = '-p no:warnings'
 asyncio_default_fixture_loop_scope = 'function' # aparentemente temporario
 
+#[tool.coverage.run]
+#concurrency = ["thread", "greenlet"] as configs do coverage estao no arq .coverage
+
 [tool.taskipy.tasks]
 lint = 'ruff check'
 pre_format = 'ruff check --fix'

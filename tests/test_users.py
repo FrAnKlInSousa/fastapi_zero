@@ -135,7 +135,7 @@ def test_updated_integrity_error(client, user, token):
 
     # alterando o user da fixture
     response = client.put(
-        f'/users/{user.id}',
+        '/users/1',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'fausto',

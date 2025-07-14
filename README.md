@@ -92,6 +92,10 @@ ou se não reconhecer o ambiente virtual:
 ## pytest-asyncio
 `poetry add --group dev pytest-asyncio`
 
+## factory-boy
+`poetry add --group dev factory-boy`
+
+
 # Database
 ## SQLite
 * Para conectar pelo terminal:

@@ -10,6 +10,7 @@
             select(User).where(User.username == new_user.username)
         ), eu tomo o seguinte erro: test_create_user - sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place?, mas se eu deixar ...where(User.username == 'test'), o teste passa
 10. na nossa aplicação assíncrona, por que a migração precisa ser assíncrona também? a aplicação vai rodar durante uma migração?
+11. qual a diferença de função assíncrona para corrotina?
 
 
 # Observações
@@ -18,3 +19,4 @@
 * Assistir live de corrotinas (#151 a #154)
 * Reassistir a aula 05 (0h50min) para entender o dependency_overrides
 * Assistir live de faker e factory-boy (#281)
+* 

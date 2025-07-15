@@ -42,8 +42,6 @@ async def session():
     async with engine.begin() as conn:
         await conn.run_sync(table_registry.metadata.drop_all)
 
-    # engine.dispose()
-
 
 @contextmanager
 def _mock_db_time(*, model, time=datetime(2025, 5, 20)):

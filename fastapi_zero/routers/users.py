@@ -59,7 +59,6 @@ async def read_users(
     current_user: T_CurrentUser,
     filter_users: Annotated[FilterPage, Query()],
 ):
-    # não dá erro de unclosed database
     users = await session.scalars(
         select(User).limit(filter_users.limit).offset(filter_users.offset)
     )
@@ -68,7 +67,6 @@ async def read_users(
 
 @router.get('/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
 async def read_user(user_id: int, session: T_Session):
-    # dá erro de unclosed database
     user_db = await session.scalar(select(User).where(User.id == user_id))
     if not user_db:
         raise HTTPException(

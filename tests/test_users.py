@@ -89,7 +89,7 @@ def test_update_user(client, user, token):
     }
 
 
-def test_update_user_not_found(client, token, user):
+def test_update_user_not_found(client, token):
     response = client.put(
         '/users/4',
         headers={'Authorization': f'Bearer {token}'},
@@ -118,23 +118,13 @@ def test_delete_user_wrong_user(client, token, other_user):
     assert response.json() == {'detail': 'Sem permissão.'}
 
 
-def test_updated_integrity_error(client, user, token):
-    # inserindo usuário Fausto
-    client.post(
-        '/users/',
-        json={
-            'username': 'fausto',
-            'email': 'fausto@example.com',
-            'password': 'secret',
-        },
-    )
-
+def test_updated_integrity_error(client, user, other_user, token):
     # alterando o user da fixture
     response = client.put(
-        '/users/1',
+        f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
-            'username': 'fausto',
+            'username': other_user.username,
             'email': 'bob@example.com',
             'password': 'newsecret',
         },
@@ -144,14 +134,14 @@ def test_updated_integrity_error(client, user, token):
     assert response.json() == {'detail': 'Usuário ou email já existe.'}
 
 
-def test_update_user_with_wrong_user(client, user, token):
+def test_update_user_with_wrong_user(client, other_user, token):
     response = client.put(
-        f'/users/{user.id + 1}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'bob',
             'email': 'bob@example.com',
-            'password': 'mypass',
+            'password': 'mynewpassword',
         },
     )
     assert response.status_code == HTTPStatus.FORBIDDEN

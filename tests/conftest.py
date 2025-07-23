@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from datetime import datetime
 
-import factory
+import factory.fuzzy
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from fastapi_zero.app import app
 from fastapi_zero.database import get_session
-from fastapi_zero.models import User, table_registry
+from fastapi_zero.models import Todo, TodoState, User, table_registry
 from fastapi_zero.security import get_password_hash
 from fastapi_zero.settings import Settings
 
@@ -97,6 +97,22 @@ def settings():
     return Settings()
 
 
+@pytest_asyncio.fixture
+async def todo(user, session):
+    my_todo = TodoFactory(user_id=user.id)
+    session.add(my_todo)
+    await session.commit()
+    return my_todo
+
+
+@pytest_asyncio.fixture
+async def other_user_todo(other_user, session):
+    my_todo = TodoFactory(user_id=other_user.id)
+    session.add(my_todo)
+    await session.commit()
+    return my_todo
+
+
 class UserFactory(factory.Factory):
     class Meta:
         model = User
@@ -104,3 +120,13 @@ class UserFactory(factory.Factory):
     username = factory.Sequence(lambda n: f'test{n}')
     email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')
     password = factory.LazyAttribute(lambda obj: f'{obj.username}#secret')
+
+
+class TodoFactory(factory.Factory):
+    class Meta:
+        model = Todo
+
+    title = factory.Faker('text')
+    description = factory.Faker('text')
+    state = factory.fuzzy.FuzzyChoice(TodoState)
+    user_id = 1

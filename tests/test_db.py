@@ -27,4 +27,5 @@ async def test_create_user(session: AsyncSession, mock_db_time):
         'email': 'test@test.com',
         'created_at': time,
         'updated_at': time,
+        'todos': [],
     }

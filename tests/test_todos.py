@@ -2,28 +2,31 @@ from http import HTTPStatus
 
 import pytest
 
-from fastapi_zero.models import TodoState
+from fastapi_zero.models import Todo, TodoState
 from tests.conftest import TodoFactory
 
 
-def test_create_todo(client, token):
-    response = client.post(
-        '/todos/',
-        json={
+def test_create_todo(client, token, mock_db_time):
+    with mock_db_time(model=Todo) as time:
+        response = client.post(
+            '/todos/',
+            json={
+                'title': 'test title',
+                'description': 'test description',
+                'state': 'draft',
+            },
+            headers={'Authorization': f'Bearer {token}'},
+        )
+
+        assert response.status_code == HTTPStatus.CREATED
+        assert response.json() == {
+            'id': 1,
             'title': 'test title',
             'description': 'test description',
             'state': 'draft',
-        },
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.CREATED
-    assert response.json() == {
-        'id': 1,
-        'title': 'test title',
-        'description': 'test description',
-        'state': 'draft',
-    }
+            'created_at': time.isoformat(),
+            'updated_at': time.isoformat(),
+        }
 
 
 @pytest.mark.asyncio
@@ -107,9 +110,10 @@ async def test_list_todos_filter_state_should_return_5_todos(
 
 
 @pytest.mark.asyncio
-async def test_delete_todo(todo, client, token):
+async def test_delete_todo(make_todo, client, token):
     response = client.delete(
-        f'/todos/{todo.id}', headers={'Authorization': f'Bearer {token}'}
+        f'/todos/{make_todo.id}',
+        headers={'Authorization': f'Bearer {token}'},
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -148,16 +152,20 @@ async def test_patch_todo_error(client, token):
 
 
 @pytest.mark.asyncio
-async def test_patch_todo(token, todo, client):
-    response = client.patch(
-        f'/todos/{todo.id}',
-        headers={'Authorization': f'Bearer {token}'},
-        json={'title': 'updated title'},
-    )
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'title': 'updated title',
-        'description': todo.description,
-        'id': todo.id,
-        'state': todo.state,
-    }
+async def test_patch_todo(token, client, mock_db_time, make_frozen_todo):
+    with mock_db_time(model=Todo) as time:
+        my_todo = await make_frozen_todo()
+        response = client.patch(
+            f'/todos/{my_todo.id}',
+            headers={'Authorization': f'Bearer {token}'},
+            json={'title': 'updated title'},
+        )
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            'title': 'updated title',
+            'description': my_todo.description,
+            'id': my_todo.id,
+            'state': my_todo.state,
+            'created_at': time.isoformat(),
+            'updated_at': time.isoformat(),
+        }

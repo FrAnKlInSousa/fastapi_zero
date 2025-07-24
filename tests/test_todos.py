@@ -110,6 +110,32 @@ async def test_list_todos_filter_state_should_return_5_todos(
 
 
 @pytest.mark.asyncio
+async def test_list_todos_should_return_all_expected_fields(
+    mock_db_time, client, user, session, token
+):
+    with mock_db_time(model=Todo) as time:
+        todo = TodoFactory.create(user_id=user.id)
+        session.add(todo)
+        await session.commit()
+        await session.refresh(todo)
+
+        response = client.get(
+            '/todos/', headers={'Authorization': f'Bearer {token}'}
+        )
+
+        assert response.json()['todos'] == [
+            {
+                'id': todo.id,
+                'created_at': time.isoformat(),
+                'updated_at': time.isoformat(),
+                'state': todo.state,
+                'description': todo.description,
+                'title': todo.title,
+            }
+        ]
+
+
+@pytest.mark.asyncio
 async def test_delete_todo(make_todo, client, token):
     response = client.delete(
         f'/todos/{make_todo.id}',

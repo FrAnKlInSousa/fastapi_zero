@@ -119,7 +119,6 @@ def test_delete_user_wrong_user(client, token, other_user):
 
 
 def test_updated_integrity_error(client, user, other_user, token):
-    # alterando o user da fixture
     response = client.put(
         f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},

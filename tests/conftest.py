@@ -98,11 +98,24 @@ def settings():
 
 
 @pytest_asyncio.fixture
-async def todo(user, session):
-    my_todo = TodoFactory(user_id=user.id)
-    session.add(my_todo)
+def make_frozen_todo(user, session):
+    async def _make():
+        todo = TodoFactory(user_id=user.id)
+        session.add(todo)
+        await session.commit()
+        await session.refresh(todo)
+        return todo
+
+    return _make
+
+
+@pytest_asyncio.fixture
+async def make_todo(session, user):
+    todo = TodoFactory(user_id=user.id)
+    session.add(todo)
     await session.commit()
-    return my_todo
+    await session.refresh(todo)
+    return todo
 
 
 @pytest_asyncio.fixture

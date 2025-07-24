@@ -43,7 +43,7 @@ def test_token_with_user_error(client):
 def test_token_invalid_password(client, user):
     response = client.post(
         '/auth/token',
-        data={'username': 'test@test.com', 'password': 'wrong_pass'},
+        data={'username': user.email, 'password': 'wrong_pass'},
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED

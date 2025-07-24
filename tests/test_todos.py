@@ -195,3 +195,11 @@ async def test_patch_todo(token, client, mock_db_time, make_frozen_todo):
             'created_at': time.isoformat(),
             'updated_at': time.isoformat(),
         }
+
+
+@pytest.mark.asyncio
+async def test_list_todos_filter_min_length(client, token):
+    response = client.get(
+        '/todos/?title=s', headers={'Authorization': f'Bearer {token}'}
+    )
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

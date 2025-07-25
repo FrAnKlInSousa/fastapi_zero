@@ -2,6 +2,7 @@ from dataclasses import asdict
 
 import pytest
 from sqlalchemy import select
+from sqlalchemy.exc import DataError, PendingRollbackError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi_zero.models import Todo, User
@@ -37,7 +38,8 @@ async def test_create_todo_error(session, user):
         title='title', description='desc', state='error', user_id=user.id
     )
     session.add(todo)
-    await session.commit()
+    with pytest.raises(DataError):
+        await session.commit()
 
-    with pytest.raises(LookupError):
+    with pytest.raises(PendingRollbackError):
         await session.scalar(select(Todo))

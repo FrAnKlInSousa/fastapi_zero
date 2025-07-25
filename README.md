@@ -1,3 +1,7 @@
+# Pré requisitos:
+
+* Ter instalado o pipx, docker e poetry
+
 # PIPX
 
 `sudo apt install pipx`
@@ -113,3 +117,16 @@ import secrets
 
 secrets.token_hex(256)
 ```
+## Postgres
+
+`poetry add psycopg[binary]`
+
+## TestContainers
+
+`poetry add --group dev testcontainers`
+
+# Comandos úteis Docker
+* se quiser rodar sem deixar o shell aberto:
+  * `docker compose up -d`
+* para parar o container:
+  * `docker compose down`
